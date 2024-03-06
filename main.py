@@ -1,10 +1,13 @@
-import face_recognition
-import os, os.path
+import os
+import os.path
+
 import cv2
-import numpy as np
-from PIL import Image
+import face_recognition
+
 import faceRecognitionAPI
-import sys
+
+image1 = "PICS\\soldiers\\soldier2.jpg"
+image2 = "PICS\\soldiers\\soldier3.jpg"
 
 
 def main():
@@ -21,22 +24,22 @@ def main():
     for i in range(0, lengthOfTerDir - 1):
         terroristPath = "PICS\\terrorists\\terrorist" + str((i + 1)) + ".jpg"
         listPicsTerrorists.append(cv2.imread(terroristPath))
-        faceRecognitionAPI.feceRecog(listPicsTerrorists, i
+        faceRecognitionAPI.feceRecog(listPicsTerrorists, i)
     '''
 
-    known_image = face_recognition.load_image_file("PICS\\soldiers\\soldier2.jpg")
-    unknown_image = face_recognition.load_image_file("PICS\\soldiers\\soldier8.jpg")
+    known_image = face_recognition.load_image_file(image1)
+    unknown_image = face_recognition.load_image_file(image2)
 
-    biden_encoding = face_recognition.face_encodings(known_image)[0]
+    known_encoding = face_recognition.face_encodings(known_image)[0]
     unknown_encoding = face_recognition.face_encodings(unknown_image)[0]
 
-    results = face_recognition.compare_faces([biden_encoding], unknown_encoding)
+    results = face_recognition.compare_faces([known_encoding], unknown_encoding)
 
-    img1 = cv2.imread("PICS\\soldiers\\soldier2.jpg")
-    img2 = cv2.imread("PICS\\soldiers\\soldier3.jpg")
-    # function calling
+    img1 = cv2.imread(image1)
+    img2 = cv2.imread(image2)
     img_h_resize = hconcat_resize([img1, img2])
-    cv2.imshow('vconcat_resize.jpg', img_h_resize)
+    image = faceRecognitionAPI.feceRecog(img_h_resize, results)
+    cv2.imshow('Image_Comparison.jpg', image)
     print(results)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
@@ -45,13 +48,10 @@ def main():
 
 
 def hconcat_resize(img_list, interpolation=cv2.INTER_CUBIC):
-    # take minimum heights
     h_min = min(img.shape[0]
                 for img in img_list)
-    # image resizing
     im_list_resize = [cv2.resize(img, (int(img.shape[1] * h_min / img.shape[0]), h_min), interpolation=interpolation)
                       for img in img_list]
-    # return final image
     return cv2.hconcat(im_list_resize)
 
 
