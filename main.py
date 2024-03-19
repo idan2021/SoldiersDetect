@@ -6,6 +6,7 @@ import face_recognition
 
 import faceRecognitionAPI
 
+
 image1 = "PICS\\soldiers\\soldier2.jpg"
 image2 = "PICS\\soldiers\\soldier3.jpg"
 
