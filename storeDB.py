@@ -1,5 +1,10 @@
+from flask import Flask, request, jsonify
 import firebase_admin
+import jsonify
 from firebase_admin import credentials, storage, db
+from urllib import request
+import firebase_admin
+from firebase_admin import credentials, db
 
 # Initialize Firebase app
 cred = credentials.Certificate("soliderdetect-firebase-adminsdk-c1cuj-1d8a6eaf3c.json")
@@ -45,3 +50,27 @@ image_urls_and_folders = [
 # Upload images to database
 for item in image_urls_and_folders:
     upload_images([item['url']], item['folder'])
+
+
+app = Flask(__name__)
+
+# Route for handling login request
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form.get('username')
+
+    password = request.form.get('password')
+
+    # Authenticate user using Firebase Realtime Database
+    users_ref = db.reference('users')
+    user_data = users_ref.child(username).get()
+
+    if user_data and user_data.get('password') == password:
+        # Authentication successful
+        return jsonify({'success': True})
+    else:
+        # Authentication failed
+        return jsonify({'success': False, 'message': 'Invalid credentials'})
+
+if __name__ == '__main__':
+    app.run(debug=True)
