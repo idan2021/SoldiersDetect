@@ -1,10 +1,7 @@
-from flask import Flask, request, jsonify
 import firebase_admin
-import jsonify
 from firebase_admin import credentials, storage, db
-from urllib import request
-import firebase_admin
-from firebase_admin import credentials, db
+
+passwords_array = {}  # Initialize list to store passwords
 
 # Initialize Firebase app
 cred = credentials.Certificate("soliderdetect-firebase-adminsdk-c1cuj-1d8a6eaf3c.json")
@@ -52,25 +49,30 @@ for item in image_urls_and_folders:
     upload_images([item['url']], item['folder'])
 
 
-app = Flask(__name__)
+# Function to retrieve user passwords from Firebase
+def get_user_passwords():
+    users_ref = db.reference('users')  # Reference the node where user data is stored
+    users_data = users_ref.get()  # Retrieve user data from Firebase
 
-# Route for handling login request
-@app.route('/login', methods=['POST'])
-def login():
-    username = request.form.get('username')
 
-    password = request.form.get('password')
+    if users_data:
+        for user_id, user_info in users_data.items():
+            # Assuming user_info is a dictionary containing user information
+            # Assuming each user_info dictionary contains only 'password' key
+            password = user_info.get('password')
+            username = user_id
+            if password:
+                passwords_array[username]=password
+    return passwords_array
 
-    # Authenticate user using Firebase Realtime Database
-    users_ref = db.reference('users')
-    user_data = users_ref.child(username).get()
+# Main function to process user passwords
+def process_user_passwords():
+    passwords = get_user_passwords()  # Retrieve passwords
+    # Process the passwords as needed
+    print("Passwords:")
+    for password in passwords:
+        print(password)
+    return passwords_array
 
-    if user_data and user_data.get('password') == password:
-        # Authentication successful
-        return jsonify({'success': True})
-    else:
-        # Authentication failed
-        return jsonify({'success': False, 'message': 'Invalid credentials'})
-
-if __name__ == '__main__':
-    app.run(debug=True)
+# Call the main function to start processing passwords
+process_user_passwords()
