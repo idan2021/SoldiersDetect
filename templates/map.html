@@ -53,16 +53,17 @@
     var textarea = popup.querySelector('input[type="text"]');
     var comment = textarea.value;
 
-    // Get the existing content of the popup
-    var existingContent = popup.innerHTML;
+    // Create a new paragraph element for the comment
+    var commentElement = document.createElement('p');
+    commentElement.textContent = comment;
 
-    // Create HTML for the new comment with a line break
-    var newContent = '<p>' + comment + '</p><br>' + existingContent;
+    // Append the new comment to the popup content
+    popup.appendChild(commentElement);
 
-    // Update the popup content with the new HTML
-    popup.innerHTML = newContent;
-
+    // Clear the text input
+    textarea.value = '';
 }
+
 
 
     //That doesn't workkkk
