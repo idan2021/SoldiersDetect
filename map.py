@@ -1,7 +1,12 @@
+from urllib import request
+
 import FigmaPy as figmapy
 import pprint
 
 from FigmaPy import FigmaPy
+from flask import render_template, jsonify
+
+import storeDB
 
 token = 'figd_7HSUewq63aMivKOxxg3TEKHhzkVRhkEks1efByaN'  # can be found in your figma user profile page
 file_key = 'UL63FTDcNng8ismP3nfp58'  # can be found in the URL of the file
@@ -18,6 +23,12 @@ print([x.get('name') for x in page1])
 ids = [x.get('id') for x in page1]
 print(ids)
 # ['7:2', '7:6', '21:4']
+
+def saveMark():
+    location = request.form['username']
+    mark = request.form['password']
+    storeDB.save_mark_to_database(location,mark)
+
 
 images = figmaPy.get_file_images(file_key=file_key, ids=ids)
 pprint.pprint(images.images)

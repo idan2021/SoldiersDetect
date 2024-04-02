@@ -1,5 +1,10 @@
+from datetime import datetime
+
 import firebase_admin
 from firebase_admin import credentials, storage, db
+from flask import jsonify
+
+from SoliderDetect.app import app
 
 passwords_array = {}  # Initialize list to store passwords
 
@@ -74,5 +79,52 @@ def process_user_passwords():
         print(password)
     return passwords_array
 
+
+def save_mark_to_database(location, mark_type):
+    ref = db.reference('marks')
+    new_mark_ref = ref.push()
+    new_mark_ref.set({
+        'location': location,
+        'type': mark_type
+    })
+# Function to save a report to the database
+def save_report_to_database(location, text, user):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    ref = db.reference('reports')  # Reference the 'reports' node in the database
+    new_report_ref = ref.push()  # Generate a new unique key for the report
+    new_report_ref.set({
+        'location': location,
+        'text': text,
+        'timestamp': timestamp,
+        'user': user
+    })
+
+
+
+def get_marks_from_database():
+    ref = db.reference('marks')
+    marks = ref.get()
+    return marks
+
+def get_reports_from_database():
+    ref = db.reference('reports')
+    reports = ref.get()
+    return reports
+
+@app.route('/get_marks', methods=['GET'])
+def get_marks():
+    marks = get_marks_from_database()
+    if marks:
+        return jsonify(marks), 200
+    else:
+        return jsonify({'error': 'No marks found'}), 404
+
+@app.route('/get_reports', methods=['GET'])
+def get_reports():
+    reports = get_reports_from_database()
+    if reports:
+        return jsonify(reports), 200
+    else:
+        return jsonify({'error': 'No reports found'}), 404
 # Call the main function to start processing passwords
 process_user_passwords()
