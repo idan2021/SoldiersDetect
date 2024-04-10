@@ -2,11 +2,11 @@ from flask import Flask, render_template, request, jsonify
 import firebase_admin
 from firebase_admin import credentials, db
 
-# Initialize Firebase app
-cred = credentials.Certificate("soliderdetect-firebase-adminsdk-c1cuj-1d8a6eaf3c.json")
-firebase_admin.initialize_app(cred, {
-    'databaseURL': 'https://soliderdetect-default-rtdb.firebaseio.com/'
-})
+# # Initialize Firebase app
+# cred = credentials.Certificate("soliderdetect-firebase-adminsdk-c1cuj-1d8a6eaf3c.json")
+# firebase_admin.initialize_app(cred, {
+#     'databaseURL': 'https://soliderdetect-default-rtdb.firebaseio.com/'
+# })
 
 app = Flask(__name__)
 

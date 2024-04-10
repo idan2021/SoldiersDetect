@@ -4,7 +4,9 @@ import firebase_admin
 from firebase_admin import credentials, storage, db
 from flask import jsonify
 
-from SoliderDetect.app import app
+from app import app
+
+#from SoliderDetect.app import app
 
 passwords_array = {}  # Initialize list to store passwords
 

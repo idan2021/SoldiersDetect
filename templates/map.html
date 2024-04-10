@@ -24,6 +24,10 @@
             right: 0;
             left: 0;
         }
+);
+
+
+
     </style>
 
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
@@ -35,16 +39,54 @@
 <div id="map"></div>
 
 <script>
+
     var map = L.map("map").setView([32.0853, 34.7818], 10);
 
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
     }).addTo(map);
 
+function createCustomIcon(color) {
+    var iconUrl;
+    switch (color) {
+        case 'soldier':
+            iconUrl = 'https://leafletjs.com/examples/custom-icons/leaf-green.png';
+            break;
+        case 'terrorist':
+            iconUrl = 'https://leafletjs.com/examples/custom-icons/leaf-red.png';
+            break;
+        case 'hostage':
+            iconUrl = 'https://leafletjs.com/examples/custom-icons/leaf-orange.png';
+            break;
+        default:
+            // Default to red color if an invalid color is provided
+            //iconUrl = 'https://leafletjs.com/examples/custom-icons/leaf-red.png';
+            break;
+    }
+
+    return L.icon({
+        iconUrl: iconUrl,
+        iconSize: [38, 95],
+        iconAnchor: [22, 94],
+        popupAnchor: [-3, -76]
+    });
+}
+
 
     map.on('click', function (e) {
-    var marker = L.marker(e.latlng).addTo(map);
+    // Prompt the user to enter/select a color
+    var color = prompt("Enter marker color (soldier, terrorist, hostage):");
+
+    // Create the custom icon based on the selected color
+    var customIcon = createCustomIcon(color);
+
+    // Create the marker with the custom icon and add it to the map
+    var marker = L.marker(e.latlng, {icon: customIcon}).addTo(map);
+
+    // Define the popup content
     var popupContent = '<input type="text" size="35"><br><button onclick="addComment(this)">Add report</button><br><button onclick="removeMarker(this)">Remove marker</button>';
+
+    // Bind popup with the marker
     var popup = marker.bindPopup(popupContent);
     });
 
@@ -75,6 +117,7 @@
     var latlng = marker.getLatLng(); // Get the latlng of the marker
     console.log("Latitude:", latlng.lat, "Longitude:", latlng.lng); // Log the latlng to the console
     }
+
 
 </script>
 
