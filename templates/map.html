@@ -26,8 +26,6 @@
         }
 );
 
-
-
     </style>
 
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
@@ -36,7 +34,14 @@
 </head>
 <body>
 
-<div id="map"></div>
+<div id="map">
+    <form id="mapForm" action="/map" method="post">
+                <!-- Hidden input fields for mark data -->
+        <input type="hidden" id="latitude" name="latitude">
+        <input type="hidden" id="longitude" name="longitude">
+        <input type="hidden" id="color" name="color">
+        </form>
+</div>
 
 <script>
 
@@ -88,6 +93,14 @@ function createCustomIcon(color) {
 
     // Bind popup with the marker
     var popup = marker.bindPopup(popupContent);
+
+     // Set values for hidden input fields with mark data
+        document.getElementById("latitude").value = e.latlng.lat;
+        document.getElementById("longitude").value = e.latlng.lng;
+        document.getElementById("color").value = color;
+
+        // Submit the form
+        document.getElementById("mapForm").submit();
     });
 
     function addComment(button) {
@@ -117,7 +130,6 @@ function createCustomIcon(color) {
     var latlng = marker.getLatLng(); // Get the latlng of the marker
     console.log("Latitude:", latlng.lat, "Longitude:", latlng.lng); // Log the latlng to the console
     }
-
 
 </script>
 

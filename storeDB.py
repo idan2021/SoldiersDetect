@@ -82,13 +82,14 @@ def process_user_passwords():
     return passwords_array
 
 
-def save_mark_to_database(location, mark_type):
+def save_mark_to_database(latitude,longitude, mark_type):
     ref = db.reference('marks')
-    new_mark_ref = ref.push()
-    new_mark_ref.set({
-        'location': location,
+    ref.push({
+        'latitude': latitude,
+        'longitude': longitude,
         'type': mark_type
     })
+
 # Function to save a report to the database
 def save_report_to_database(location, text, user):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
